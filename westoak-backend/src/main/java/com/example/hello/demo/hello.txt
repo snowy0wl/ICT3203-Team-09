@@ -1,0 +1,1 @@
+jdbc:mysql://remotemysql.com:3306/6rrSCXqtl5,6rrSCXqtl5,GkgteSYpm5
