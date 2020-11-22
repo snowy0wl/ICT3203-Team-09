@@ -13,8 +13,8 @@ pipeline {
                 script {
                     def scannerHome = tool 'SonarQube';
                     withSonarQubeEnv('SonarQube') {
-						sh 'mvn clean package sonar:sonar'
-                        sh "${scannerHome}/bin/sonar-scanner \
+						sh 'mvn clean package'
+                        sh "mvn sonar:sonar \
 						-Dsonar.projectKey=team09\
                         -Dsonar.sources=. \
                         -Dsonar.host.url=http://192.168.2.75:9000/\
