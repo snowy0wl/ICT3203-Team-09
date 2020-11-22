@@ -18,7 +18,6 @@ pipeline {
                         -Dsonar.sources=. \
                         -Dsonar.host.url=http://192.168.2.75:9000/\
                         -Dsonar.login=8e78588a26b13ee6330b5db5533b9e76d3afbdb3\
-						-Dsonar.sources=src/main/java/ \
 						-Dsonar.java.binaries=target/classes"
                     }
                 }
