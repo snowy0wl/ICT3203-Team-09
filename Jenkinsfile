@@ -13,7 +13,6 @@ pipeline {
                 script {
                     def scannerHome = tool 'SonarQube';
                     withSonarQubeEnv('SonarQube') {
-						sh 'mvn clean package'
                         sh "mvn sonar:sonar \
 						-Dsonar.projectKey=team09\
                         -Dsonar.sources=. \
