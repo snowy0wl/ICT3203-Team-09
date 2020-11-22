@@ -13,12 +13,13 @@ pipeline {
                 script {
                     def scannerHome = tool 'SonarQube';
                     withSonarQubeEnv('SonarQube') {
-						sh "mvn sonar:sonar \
+						sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar'
+                        sh "mvn sonar:sonar \
+						-Dsonar.java.binaries=D:\aiwb_s**
 						-Dsonar.projectKey=team09\
                         -Dsonar.sources=. \
                         -Dsonar.host.url=http://192.168.2.75:9000/\
-                        -Dsonar.login=8e78588a26b13ee6330b5db5533b9e76d3afbdb3\
-						-Dsonar.java.binaries=D:\aiwb_s**"
+                        -Dsonar.login=8e78588a26b13ee6330b5db5533b9e76d3afbdb3"
                     }
                 }
             }
