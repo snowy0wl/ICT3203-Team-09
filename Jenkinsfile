@@ -1,48 +1,31 @@
 pipeline {
-	agent any
-	
-	tools {
-		nodejs "node"
-		jdk "openjdk-11"
-		maven "Maven 3.6.3"
-	}
-	
-	stages {
-		stage('Build') {
-			steps {
-				dir('west-oak') {
-					sh 'npm install'
-					sh 'npm run build'
-				}
-				dir('westoak-backend') {
-					sh 'mvn -B -DskipTests clean package'
-				}
-			}
-		}
-		stage('Test') {
-			steps {
-				dir('west-oak') {
-					sh 'CI=true npm test'
-				}
-				dir('westoak-backend') {
-					sh 'mvn test'
-				}
-			}
-		}
-		stage('OWASP DependencyCheck') {
-			steps {
-				dependencyCheck additionalArguments: '--format HTML --format XML', odcInstallation: 'Default'
-			}
-		}
-	}	
-	post {
-		success {
-			dependencyCheckPublisher pattern: 'dependency-check-report.xml'
-		}
-		always {
-			//junit 'target/surefire-reports/*.xml'
-			junit allowEmptyResults: true, testResults: '**/test-results/*.xml'
-		}
-	}
-}
+    agent any
+    
+    stages {
+        stage('Checkout SCM') {
+            steps {
+                checkout scm
+            }
+        }
 
+        stage('Code Quality Check via SonarQube') {
+            steps {
+                script {
+                    def scannerHome = tool 'SonarQube';
+                    withSonarQubeEnv('SonarQube') {
+                        sh "${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=team09\
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=http://192.168.2.81:9000\
+                        -Dsonar.login=8e78588a26b13ee6330b5db5533b9e76d3afbdb3"
+                    }
+                }
+            }
+        }
+    }
+        post {
+            always {
+                recordIssues enabledForFailure: true, tool: sonarQube()
+            }
+        }	
+}
