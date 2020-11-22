@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent {docker { image 'maven' }}
     tools {maven 'maven'}
     stages {
         stage('Checkout SCM') {
