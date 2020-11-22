@@ -1,39 +1,33 @@
 pipeline {
     agent {docker { image 'maven' }}
     tools {maven 'maven'}
-    stages {
-        stage('Checkout SCM') {
-            steps {
-                checkout scm
+        stages {
+            stage('Checkout SCM') {
+                steps {
+                    checkout scm
+                }
+            }
+            stage ('Build') {
+                steps {
+                    sh '${M2_HOME}/bin/mvn --batch-mode -V -U -e clean verify -Dsurefire.useFile=false -Dmaven.test.failure.ignore'
+                }
+            }
+
+            stage ('Analysis') {
+                steps {
+                    sh '${M2_HOME}/bin/mvn --batch-mode -V -U -e checkstyle:checkstyle pmd:pmd pmd:cpd findbugs:findbugs spotbugs:spotbugs'
+                }
             }
         }
-        stage ('Analysis') {
-            steps {
-                sh 'mvn --batch-mode -V -U -e checkstyle:checkstyle pmd:pmd pmd:cpd findbugs:findbugs'
-            }
-        }
-
-        // stage('Code Quality Check via SonarQube') {
-        //     steps {
-        //         script {
-        //             def scannerHome = tool 'SonarQube';
-        //             withSonarQubeEnv('SonarQube') {
-        //                 sh "mvn sonar:sonar \
-		// 				-Dsonar.projectKey=team09\
-        //                 -Dsonar.sources=. \
-        //                 -Dsonar.host.url=http://192.168.2.75:9000/\
-        //                 -Dsonar.login=8e78588a26b13ee6330b5db5533b9e76d3afbdb3"
-
-        //             }
-        //         }
-        //     }
-        // }
-    }
         post {
             always {
-                recordIssues(
-                    enabledForFailure: true, aggregatingResults: true, 
-                    tools: [java(), checkStyle(pattern: 'checkstyle-result.xml', reportEncoding: 'UTF-8')]
-                )
+                junit testResults: '**/target/surefire-reports/TEST-*.xml'
+
+                recordIssues enabledForFailure: true, tools: [mavenConsole(), java(), javaDoc()]
+                recordIssues enabledForFailure: true, tool: checkStyle()
+                recordIssues enabledForFailure: true, tool: spotBugs()
+                recordIssues enabledForFailure: true, tool: cpd(pattern: '**/target/cpd.xml')
+                recordIssues enabledForFailure: true, tool: pmdParser(pattern: '**/target/pmd.xml')
+            }
         }	
 }
