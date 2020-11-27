@@ -17,18 +17,17 @@ pipeline {
         // }
         stage('Code Quality Check via SonarQube') {
             steps {
-                    script {
-                        def scannerHome = tool 'SonarQube';
-                        withSonarQubeEnv('SonarQube') {
-                            sh "mvn sonar:sonar \
-                            -Dsonar.projectKey=team09\
-                            -Dsonar.sources=. \
-                            -Dsonar.host.url=http://192.168.2.75:9000/\
-                            -Dsonar.login=74cc0598a84a51ffad9faf25ae7b60c864635931"
-                        }
+                script {
+                    def scannerHome = tool 'SonarQube';
+                    withSonarQubeEnv('SonarQube') {
+                        sh "mvn sonar:sonar \
+                        -Dsonar.projectKey=team09\
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=http://192.168.2.75:9000/\
+                        -Dsonar.login=74cc0598a84a51ffad9faf25ae7b60c864635931"
                     }
                 }
             }
         }
-    } 
+    }
 }
