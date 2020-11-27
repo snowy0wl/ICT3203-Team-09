@@ -19,9 +19,9 @@ pipeline {
             steps {
                 dir('westoak-backend') {
                     sh "mvn sonar:sonar \
-                    -Dsonar.projectKey=OWASP \
-                    -Dsonar.host.url=http://192.168.0.104:9000 \
-                    -Dsonar.login=9429ffb2ff50516f2f754fab891e093648aa73a9"
+                    -Dsonar.projectKey=team09 \
+                    -Dsonar.host.url=http://192.168.2.75:9000 \
+                    -Dsonar.login=74cc0598a84a51ffad9faf25ae7b60c864635931"
                 }
             }
         }
