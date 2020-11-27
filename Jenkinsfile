@@ -8,13 +8,13 @@ pipeline {
     }
 
     stages {
-        stage('Build') {
-            steps {
-                dir('westoak-backend') {
-                    sh 'mvn -B -DskipTests clean package'
-                }
-            }
-        }
+        // stage('Build') {
+        //     steps {
+        //         dir('westoak-backend') {
+        //             sh 'mvn -B -DskipTests clean package'
+        //         }
+        //     }
+        // }
         stage('Code Quality Check via SonarQube') {
             steps {
                 dir('westoak-backend') {
